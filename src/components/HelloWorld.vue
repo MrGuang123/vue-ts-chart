@@ -1,6 +1,14 @@
+<!--
+ * @Description: 
+ * @Autor: yantingguang@tusdao.com
+ * @Date: 2020-01-19 17:27:04
+ * @LastEditors  : yantingguang@tusdao.com
+ * @LastEditTime : 2020-01-19 19:30:02
+ -->
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
+    <h1 @click="ccc">{{ msg }}</h1>
+    <h2>{{ test }}</h2>
     <p>
       For a guide and recipes on how to configure / customize this project,<br />
       check out the
@@ -113,8 +121,18 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-@Component
+@Component({
+  methods: {
+    ccc() {
+      console.log("aaa");
+    }
+  }
+})
 export default class HelloWorld extends Vue {
+  test: String = "hello world";
+  // ccc() {
+  //   console.log("ccc");
+  // }
   @Prop() private msg!: string;
 }
 </script>
