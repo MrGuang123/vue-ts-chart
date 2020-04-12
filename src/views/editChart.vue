@@ -3,13 +3,27 @@
  * @Autor: yantingguang@tusdao.com
  * @Date: 2020-02-17 23:12:59
  * @LastEditors: yantingguang@tusdao.com
- * @LastEditTime: 2020-02-29 23:14:22
+ * @LastEditTime: 2020-04-12 14:45:58
  -->
 <template>
   <div class="edit-chart">
-    <img :src="imgSrc" class="testPicture" alt="" />
     <div class="edit-area">
-      <el-input v-model="chartName" placeholder="请输入图表名称"></el-input>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-input v-model="chartName" placeholder="请输入图表名称"></el-input>
+        </el-col>
+        <el-col :span="12">
+          <el-select v-model="chartType">
+            <el-option
+              v-for="item in typeList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+        </el-col>
+      </el-row>
       <div class="run">
         <div class="error-in" v-if="errorInfo"></div>
         <el-button type="primary" @click="submitChart" v-show="true"
@@ -23,7 +37,7 @@
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
+import { Vue, Component, Prop } from "vue-property-decorator";
 import echarts from "echarts";
 import base64ToBlob from "../utils/base64ToBlob";
 import api from "../api/index";
@@ -53,7 +67,22 @@ export default Vue.extend({
         type: 'line',
         data:[220, 182, 191, 234, 290, 330, 310]
     }]
-};`
+};`,
+      chartType: "line",
+      typeList: [
+        {
+          label: "折线图",
+          value: "line"
+        },
+        {
+          label: "柱状图",
+          value: "bar"
+        },
+        {
+          label: "饼状图",
+          value: "pie"
+        }
+      ]
     };
   },
   mounted() {
@@ -155,6 +184,7 @@ export default Vue.extend({
       formData.append("img", blob);
       formData.append("option", optionStr);
       formData.append("chartName", this.chartName);
+      formData.append("chartType", this.chartType);
 
       try {
         let result;
@@ -177,15 +207,6 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .el-button {
   border-radius: 0;
-}
-.testPicture {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100px;
-  height: 100px;
-  border: 2px solid #f00;
-  z-index: 100;
 }
 .edit-chart {
   display: flex;

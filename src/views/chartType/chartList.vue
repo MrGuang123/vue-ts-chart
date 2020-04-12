@@ -3,12 +3,15 @@
  * @Autor: yantingguang@tusdao.com
  * @Date: 2020-02-17 18:38:50
  * @LastEditors: yantingguang@tusdao.com
- * @LastEditTime: 2020-02-29 23:30:56
+ * @LastEditTime: 2020-04-12 14:33:15
  -->
 <template>
   <div class="wrap-body">
     <Aside @select="selectTab" />
     <div class="wrap-content">
+      <el-button type="primary" class="create-chart" @click="createChart"
+        >创建图表</el-button
+      >
       <div class="chart-list">
         <el-row :gutter="10">
           <el-col
@@ -29,76 +32,68 @@
           </el-col>
         </el-row>
       </div>
-      <circle-nav></circle-nav>
+      <!-- <circle-nav></circle-nav> -->
     </div>
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue";
+// import Vue from "vue";
+import { Vue, Component, Prop } from "vue-property-decorator";
 import Aside from "../../components/aside.vue";
 import CircleNav from "../../components/circleNav.vue";
 import api from "../../api/index";
-const pic1 = require("../../assets/1.png");
-const pic2 = require("../../assets/2.png");
-const pic3 = require("../../assets/3.png");
-export default Vue.extend({
-  data() {
-    return {
-      chartList: [
-        // {
-        //   poster: pic1,
-        //   chartName: "basic line",
-        //   des: "no",
-        //   chartId: 1,
-        //   type: "line"
-        // },
-        // {
-        //   poster: pic2,
-        //   chartName: "custom line",
-        //   des: "no",
-        //   chartId: 2,
-        //   type: "line"
-        // },
-        // {
-        //   poster: pic3,
-        //   chartName: "hello line chart",
-        //   des: "no",
-        //   chartId: 3,
-        //   type: "line"
-        // }
-      ]
-    };
-  },
-  mounted() {
-    console.log(api);
-    this.getChartList();
-  },
-  methods: {
-    editChart(chartId: string) {
-      console.log(chartId);
-      let routerData = this.$router.resolve({
-        path: "/edit",
-        query: {
-          chartId: chartId
-        }
-      });
 
-      window.open(routerData.href, "_blank");
-    },
-    selectTab(route: string) {
-      console.log(route);
-    },
-    async getChartList() {
-      let result = await api.getChartList();
-      this.chartList = result.data.data || [];
-      console.log(result);
-    }
-  },
+@Component({
   components: {
     Aside,
     CircleNav
   }
-});
+})
+export default class ChartList extends Vue {
+  chartList = [];
+  type = "all";
+
+  mounted() {
+    this.getChartList();
+  }
+
+  async getChartList() {
+    let param = {
+      type: this.type
+    };
+    let result = await api.getChartList(param);
+    this.chartList = result.data.data || [];
+    console.log(result);
+  }
+
+  createChart() {
+    let routerData = this.$router.resolve({
+      path: "/edit",
+      query: {
+        type: "add"
+      }
+    });
+    window.open(routerData.href, "_blank");
+  }
+
+  editChart(chartId: string) {
+    console.log(chartId);
+    let routerData = this.$router.resolve({
+      path: "/edit",
+      query: {
+        chartId: chartId
+      }
+    });
+
+    window.open(routerData.href, "_blank");
+  }
+
+  selectTab(route: string) {
+    console.log(route);
+    this.type = route;
+    this.getChartList();
+  }
+}
 </script>
 <style lang="scss" scoped>
 .wrap-body {
@@ -106,7 +101,7 @@ export default Vue.extend({
 }
 .wrap-content {
   flex: 1;
-  padding: 50px 30px;
+  padding: 80px 30px 50px;
   min-height: 500px;
   position: relative;
   overflow: hidden;
@@ -142,5 +137,12 @@ export default Vue.extend({
   right: -30px;
   border: 1px solid #ccc;
   border-radius: 50%;
+}
+.create-chart {
+  position: fixed;
+  top: 100px;
+  right: 30px;
+  background-color: #293c55;
+  border-color: #293c55;
 }
 </style>

@@ -3,7 +3,7 @@
  * @Autor: yantingguang@tusdao.com
  * @Date: 2020-02-26 19:50:03
  * @LastEditors: yantingguang@tusdao.com
- * @LastEditTime: 2020-02-29 22:12:42
+ * @LastEditTime: 2020-04-12 13:52:11
  */
 import axios from "axios";
 
@@ -22,12 +22,8 @@ export default {
   delete(chartId: string) {
     return instance.delete(chartId);
   },
-  getChartList(chartType: string = "", pageIndex = 1, pageSize = 10) {
-    return instance.get("/chartList", {
-      params: {
-        chartType
-      }
-    });
+  getChartList(param: any) {
+    return instance.get("/chartList", { params: param });
   },
   getChartById(chartId: string) {
     return instance.get(`/chartList/${chartId}`);

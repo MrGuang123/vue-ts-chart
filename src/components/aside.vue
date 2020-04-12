@@ -3,7 +3,7 @@
  * @Autor: yantingguang@tusdao.com
  * @Date: 2020-02-17 16:54:49
  * @LastEditors: yantingguang@tusdao.com
- * @LastEditTime: 2020-02-17 16:54:49
+ * @LastEditTime: 2020-04-12 13:39:47
  -->
 <template>
   <aside class="aside">
@@ -29,50 +29,48 @@
   </aside>
 </template>
 <script lang="ts">
-import Vue from "vue";
-export default Vue.extend({
-  data() {
-    return {
-      direction: "<",
-      collapse: false,
-      menuList: [
-        {
-          menuName: "全部",
-          menuRoute: "all",
-          menuIcon: "el-icon-location"
-        },
-        {
-          menuName: "折线图",
-          menuRoute: "line",
-          menuIcon: "el-icon-location"
-        },
-        {
-          menuName: "柱状图",
-          menuRoute: "bar",
-          menuIcon: "el-icon-menu"
-        },
-        {
-          menuName: "饼状图",
-          menuRoute: "pie",
-          menuIcon: "el-icon-document"
-        }
-      ]
-    };
-  },
-  methods: {
-    selectTab(index: string, keyPath: string): void {
-      console.log(index, keyPath);
-      // this.$router.push({
-      //   path: index
-      // });
-      this.$emit("select", index);
+import { Vue, Component, Prop, Emit } from "vue-property-decorator";
+
+@Component
+export default class Aside extends Vue {
+  direction = "<";
+  collapse = false;
+  menuList = [
+    {
+      menuName: "全部",
+      menuRoute: "all",
+      menuIcon: "el-icon-location"
     },
-    collapseAside(): void {
-      this.collapse = !this.collapse;
-      this.direction = this.collapse ? ">" : "<";
+    {
+      menuName: "折线图",
+      menuRoute: "line",
+      menuIcon: "el-icon-location"
+    },
+    {
+      menuName: "柱状图",
+      menuRoute: "bar",
+      menuIcon: "el-icon-menu"
+    },
+    {
+      menuName: "饼状图",
+      menuRoute: "pie",
+      menuIcon: "el-icon-document"
     }
+  ];
+
+  selectTab(route: string, keyPath: string): void {
+    console.log(route, keyPath);
+    this.select(route);
   }
-});
+
+  @Emit()
+  select(route: string) {}
+
+  collapseAside(): void {
+    this.collapse = !this.collapse;
+    this.direction = this.collapse ? ">" : "<";
+  }
+}
 </script>
 <style lang="scss" scoped>
 .el-menu-vertical-demo {
